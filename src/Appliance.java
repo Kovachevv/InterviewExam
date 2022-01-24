@@ -6,7 +6,6 @@ import java.time.LocalDate;
 public class Appliance extends BaseProduct{
 
 
-
     private String model;
     private LocalDate productionDate;
     private double weight;
@@ -41,9 +40,9 @@ public class Appliance extends BaseProduct{
 
     private BigDecimal calculateTotalPrice(BigDecimal price,double quantity){
 
-        BigDecimal value  = price.multiply(BigDecimal.valueOf(quantity));
+        BigDecimal totalPrice  = price.multiply(BigDecimal.valueOf(quantity));
 
-        return value.setScale(2,RoundingMode.HALF_UP).stripTrailingZeros();
+        return totalPrice.setScale(2,RoundingMode.HALF_UP).stripTrailingZeros();
     }
 
     @Override
@@ -55,11 +54,5 @@ public class Appliance extends BaseProduct{
         return this.getName() + " " + this.getBrand() + " " + this.getModel() + '\n' +
                 format.format(this.getQuantity()) + " x $" + format.format(this.getPrice()) + " = $" + calculateTotalPrice(this.getPrice(),this.getQuantity());
     }
-
-    public BigDecimal getTotalDiscount(int discount, BigDecimal price){
-
-        return BigDecimal.valueOf(discount * 100L).divide(price);
-    }
-
 
 }

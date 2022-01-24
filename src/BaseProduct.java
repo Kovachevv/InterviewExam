@@ -67,8 +67,5 @@ public class BaseProduct {
 
         return subTotal.setScale(2,RoundingMode.HALF_UP);
     }
-/*
-    public static BigDecimal percentage(BigDecimal base, BigDecimal pct){
-        return base.multiply(pct).divide(ONE_HUNDRED);
-    }*/
+
 }

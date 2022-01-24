@@ -16,13 +16,11 @@ public class Food extends BaseProduct{
     }
 
 
-
-
     private BigDecimal calculateTotalPrice(BigDecimal price, double quantity){
 
-        BigDecimal value  = price.multiply(BigDecimal.valueOf(quantity));
+        BigDecimal totalPrice  = price.multiply(BigDecimal.valueOf(quantity));
 
-        return value.setScale(2, RoundingMode.HALF_UP);
+        return totalPrice.setScale(2, RoundingMode.HALF_UP);
     }
 
     @Override

@@ -1,40 +1,36 @@
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.LinkedHashMap;
 
 public class Cashier {
 
     public static void main(String[] args) {
 
+        //Initializing the Shopping cart and saving it in a variable that the printReceipt method receives as a parameter.
         ShoppingCart shoppingCart = initShoppingCart();
-        printReceipt(shoppingCart);
 
-
+        printReceipt(shoppingCart, shoppingCart.getPurchaseDate());
     }
 
     //printing the receipt
-    private static void printReceipt(ShoppingCart shoppingCart){
+    private static void printReceipt(ShoppingCart shoppingCart,LocalDateTime purchaseDate){
 
-        shoppingCart.addDiscount();
-        System.out.println("Date: " + DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(shoppingCart.getPurchaseDate()));
-        System.out.println();
+        System.out.println("Date: " + DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(purchaseDate));
+
         System.out.println("---Products---");
-        System.out.println();
-
 
         for (int i = 0; i < shoppingCart.getItems().size(); i++) {
+            System.out.println();
             System.out.println(shoppingCart.getItems().get(i));
             if(shoppingCart.getItems().get(i).getDiscount() != 0){
                 System.out.println("#discount " + shoppingCart.getItems().get(i).getDiscount() + "% -$" + shoppingCart.getItems().get(i).getTotalDiscount());
             }
-            System.out.println();
         }
         System.out.println("--------------------------------------------------------");
         System.out.println("SUBTOTAL: $" + shoppingCart.getSubtotal());
         System.out.println("DISCOUNT: -$" + shoppingCart.getTotalDiscount());
+        System.out.println();
         System.out.println("TOTAL: $" + shoppingCart.getSubtotal().subtract(shoppingCart.getTotalDiscount()));
     }
 

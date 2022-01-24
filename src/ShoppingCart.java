@@ -1,10 +1,8 @@
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
-
 import static java.time.temporal.ChronoUnit.DAYS;
 
 public class ShoppingCart {
@@ -31,61 +29,53 @@ public class ShoppingCart {
         return this;
     }
 
+    //Adding the product to the cart and checking the class, so a discount is added if it matches the requirements.
     public void addProduct(BaseProduct product){
-        items.add(product);
-    }
-
-    public void addDiscount(){
-
-        for (int i = 0; i < items.size(); i++) {
-            BaseProduct currentItem = items.get(i);
-            if(currentItem.getClass().equals(Food.class) ||currentItem.getClass().equals(Beverage.class) ){
-                if (currentItem instanceof Food) {
-                    Food food =(Food) currentItem;
+            if(product.getClass().equals(Food.class) || product.getClass().equals(Beverage.class) ){
+                if (product instanceof Food) {
+                    Food food =(Food) product;
                     long daysBetween = DAYS.between(food.getExpirationDate(), purchaseDate);
                     if(daysBetween == 0){
                         food.setDiscount(50);
                     }else if(Math.abs(daysBetween) <= 5){
                         food.setDiscount(10);
                     }
-                    items.set(i,food);
+                    items.add(food);
                 }else{
-                    Beverage beverage = (Beverage) currentItem;
+                    Beverage beverage = (Beverage) product;
                     long daysBetween = DAYS.between(beverage.getExpirationDate(), purchaseDate);
                     if(daysBetween == 0){
                         beverage.setDiscount(50);
                     }else if(Math.abs(daysBetween) <= 5){
                         beverage.setDiscount(10);
                     }
-                    items.set(i,beverage);
+                    items.add(beverage);
                 }
-            }else if(currentItem.getClass().equals(Clothing.class)){
+            }else if(product.getClass().equals(Clothing.class)){
                 String dayOfWeek = getDayOfWeek(purchaseDate);
-                Clothing clothing = (Clothing) currentItem;
+                Clothing clothing = (Clothing) product;
                 if(!dayOfWeek.equals("Saturday") && !dayOfWeek.equals("Sunday")){
                     clothing.setDiscount(10);
-                    items.set(i,clothing);
                 }
+                items.add(clothing);
 
             }else{
-                Appliance appliance = (Appliance) currentItem;
+                Appliance appliance = (Appliance) product;
                 String dayOfWeek = getDayOfWeek(purchaseDate);
                 if((dayOfWeek.equals("Saturday") || dayOfWeek.equals("Sunday")) && appliance.getPrice().compareTo(BigDecimal.valueOf(999)) > 0){
                     appliance.setDiscount(5);
-                    items.set(i,appliance);
                 }
+                items.add(appliance);
             }
+
 
         }
 
 
-    }
-
     public BigDecimal getSubtotal(){
         BigDecimal subtotal = new BigDecimal(0);
-        for (int i = 0; i < items.size(); i++) {
-            BigDecimal price = items.get(i).getSubtotal();
-
+        for (BaseProduct item : items) {
+            BigDecimal price = item.getSubtotal();
             subtotal = subtotal.add(price);
         }
         return subtotal;
@@ -93,12 +83,13 @@ public class ShoppingCart {
 
     public BigDecimal getTotalDiscount(){
         BigDecimal totalDiscount = new BigDecimal(0);
-        for (int i = 0; i < items.size(); i++) {
-            BigDecimal discount = items.get(i).getTotalDiscount();
+        for (BaseProduct item : items) {
+            BigDecimal discount = item.getTotalDiscount();
             totalDiscount = totalDiscount.add(discount);
         }
         return totalDiscount;
     }
+
     private String getDayOfWeek(LocalDateTime purchaseDate) {
 
         int day = purchaseDate.getDayOfMonth();
@@ -111,7 +102,7 @@ public class ShoppingCart {
         calendar.set(Calendar.DAY_OF_MONTH,day);
         calendar.set(Calendar.YEAR, year);
 
-        return calendar.getDisplayName(Calendar.DAY_OF_WEEK,Calendar.LONG, Locale.US);
+        return calendar.getDisplayName(Calendar.DAY_OF_WEEK,Calendar.LONG, Locale.ENGLISH);
 
     }
 }
